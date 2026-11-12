@@ -15,7 +15,10 @@ frame_dt = 0.0
 
 
 def mushroom_color(hp):
-    """Use default colors."""
+    """Color reflects remaining health; newly hit mushrooms flash white."""
+    if hp in (1, 2, 3, 4):
+        return {4: (200, 80, 170), 3: (170, 80, 155),
+                2: (130, 80, 140), 1: (90, 80, 120)}[hp]
     return None
 
 
@@ -23,11 +26,9 @@ def on_segment_hit(segment, score):
     """No hit effect yet."""
     return None
 
-
 def wave_speed_bonus(wave):
     """Default speed."""
     return 1
-
 
 class Segment:
     def __init__(self, row, col, direction):
@@ -83,7 +84,7 @@ class Game:
             del self.mushrooms[cell]
             mushroom_flashes.pop(cell, None)
         else:
-            pass
+            mushroom_flashes[cell] = 0.12
         self.score += 5
 
     def split_chain(self, chain, index):
@@ -154,7 +155,7 @@ class Game:
     def draw(self, screen):
         screen.fill((8, 8, 16))
         for (row, col), hp in self.mushrooms.items():
-            color = mushroom_color(hp) or (200 - (MUSHROOM_HP - hp) * 40, 80, 170)
+            color = (255, 255, 255) if (row, col) in mushroom_flashes else mushroom_color(hp)
             center = (col * CELL + CELL // 2, row * CELL + CELL // 2)
             pygame.draw.circle(screen, color, center, CELL // 2 - 1)
             pygame.draw.rect(screen, (230, 230, 200),
