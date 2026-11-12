@@ -35,7 +35,7 @@ def on_segment_hit(segment, score):
 
 def wave_speed_bonus(wave):
     """Increase centipede movement rate by 15 percent per wave."""
-    return 1
+    return 1 + 0.15 * (max(1, wave) - 1)
 
 
 class Segment:
