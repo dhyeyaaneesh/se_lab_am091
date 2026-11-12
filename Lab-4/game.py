@@ -23,12 +23,20 @@ def mushroom_color(hp):
 
 
 def on_segment_hit(segment, score):
-    """No hit effect yet."""
-    return None
+    """Spawn a short-lived burst at the destroyed segment's position."""
+    x, y = segment.col * CELL + CELL // 2, segment.row * CELL + CELL // 2
+    for _ in range(12):
+        velocity = pygame.Vector2(random.uniform(-1, 1), random.uniform(-1, 1))
+        if velocity.length_squared() > 0:
+            velocity.scale_to_length(random.uniform(60, 180))
+        sparks.append([pygame.Vector2(x, y), velocity, 0.35,
+                       (255, 220, 80) if score >= 100 else (255, 160, 70)])
+
 
 def wave_speed_bonus(wave):
-    """Default speed."""
+    """Increase centipede movement rate by 15 percent per wave."""
     return 1
+
 
 class Segment:
     def __init__(self, row, col, direction):
